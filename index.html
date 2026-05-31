@@ -579,21 +579,21 @@ footer .f-copy{font-size:.75rem;color:#555;margin-top:1rem}
         <div class="form-row">
           <div class="form-group">
             <label>Your Name *</label>
-            <input type="text" placeholder="Enter your full name" required>
+            <input id="cf-name" type="text" placeholder="Enter your full name" required>
           </div>
           <div class="form-group">
             <label>Phone Number *</label>
-            <input type="tel" placeholder="+91 XXXXX XXXXX" required>
+            <input id="cf-phone" type="tel" placeholder="+91 XXXXX XXXXX" required>
           </div>
         </div>
         <div class="form-row">
           <div class="form-group">
             <label>Location</label>
-            <input type="text" placeholder="City / Village name">
+            <input id="cf-location" type="text" placeholder="City / Village name">
           </div>
           <div class="form-group">
             <label>Case Type</label>
-            <select>
+            <select id="cf-case">
               <option value="">Select your case type</option>
               <option>Property / Land Dispute</option>
               <option>Criminal Matter</option>
@@ -609,10 +609,10 @@ footer .f-copy{font-size:.75rem;color:#555;margin-top:1rem}
         </div>
         <div class="form-group full" style="margin-bottom:1rem">
           <label>Briefly Describe Your Issue</label>
-          <textarea placeholder="Tell us about your legal matter in a few lines..."></textarea>
+          <textarea id="cf-message" placeholder="Tell us about your legal matter in a few lines..."></textarea>
         </div>
-        <button class="form-submit" onclick="alert('Thank you! Advocate Maithani\'s office will call you within 2 hours. For urgent matters, call +91 95687 45859 directly.')">
-          Submit — Get Consultation
+        <button class="form-submit" onclick="sendToWhatsApp()">
+          Submit — Send to Advocate via WhatsApp
         </button>
       </div>
     </div>
@@ -640,7 +640,30 @@ footer .f-copy{font-size:.75rem;color:#555;margin-top:1rem}
 </div>
 
 <script>
-// Simple scroll animation
+// WhatsApp Form Submission
+function sendToWhatsApp() {
+  var name     = document.getElementById('cf-name').value.trim();
+  var phone    = document.getElementById('cf-phone').value.trim();
+  var location = document.getElementById('cf-location').value.trim();
+  var caseType = document.getElementById('cf-case').value.trim();
+  var message  = document.getElementById('cf-message').value.trim();
+
+  if (!name) { alert('Please enter your name.'); return; }
+  if (!phone) { alert('Please enter your phone number.'); return; }
+
+  var text =
+    '🙏 *New Consultation Request*\n\n' +
+    '👤 *Name:* ' + name + '\n' +
+    '📞 *Phone:* ' + phone + '\n' +
+    (location ? '📍 *Location:* ' + location + '\n' : '') +
+    (caseType ? '⚖️ *Case Type:* ' + caseType + '\n' : '') +
+    (message  ? '\n📝 *Details:*\n' + message : '');
+
+  var url = 'https://wa.me/919568745859?text=' + encodeURIComponent(text);
+  window.open(url, '_blank');
+}
+
+// Scroll animation
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if(entry.isIntersecting){
